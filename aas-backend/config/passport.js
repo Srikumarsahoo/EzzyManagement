@@ -35,29 +35,31 @@ module.exports = (passport) => {
   );
 
   // 🔹 TWITTER STRATEGY
+  const TwitterStrategy = require("passport-twitter-oauth2").Strategy;
+const User = require("../models/User");
+
+module.exports = (passport) => {
+  // === Twitter OAuth 2.0 ===
   passport.use(
     new TwitterStrategy(
       {
-        consumerKey: process.env.TWITTER_CONSUMER_KEY,
-        consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+        clientID: process.env.TWITTER_CLIENT_ID,  // from Twitter Developer Portal
+        clientSecret: process.env.TWITTER_CLIENT_SECRET,
         callbackURL: "http://localhost:5000/api/auth/twitter/callback",
-        includeEmail: true, // ⚡ important to get user email
+        scope: ["tweet.read", "users.read", "offline.access"], // you can adjust scopes
       },
-      async (token, tokenSecret, profile, done) => {
+      async (accessToken, refreshToken, profile, done) => {
         try {
-          // Twitter may not always provide email → handle safely
-          const email = profile.emails && profile.emails.length > 0 
-            ? profile.emails[0].value 
-            : `${profile.username}@twitter.com`;
-
-          let user = await User.findOne({ email });
+          // Check if user exists
+          let user = await User.findOne({ email: profile.emails?.[0]?.value });
 
           if (!user) {
+            // Create new user
             user = new User({
               name: profile.displayName,
-              username: profile.username,
-              email: email,
-              password: null, // no password for Twitter users
+              username: profile.username, // twitter handle
+              email: profile.emails?.[0]?.value || `${profile.id}@twitter.com`, // fallback if no email
+              password: null,
             });
             await user.save();
           }
@@ -70,6 +72,7 @@ module.exports = (passport) => {
       }
     )
   );
+};
 
   // 🔹 Serialize / Deserialize User
   passport.serializeUser((user, done) => {

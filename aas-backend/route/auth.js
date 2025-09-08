@@ -126,12 +126,12 @@ router.get(
   }
 );
 
-// ========== TWITTER AUTH ROUTES ==========
+// ========== TWITTER AUTH ROUTES (OAuth 2.0) ==========
 
 // 1) Start Twitter login/signup
 router.get(
   "/twitter",
-  passport.authenticate("twitter", { scope: ["email"] })
+  passport.authenticate("twitter", { scope: ["tweet.read", "users.read", "offline.access"] })
 );
 
 // 2) Twitter OAuth callback
