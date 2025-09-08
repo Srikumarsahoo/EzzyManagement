@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +27,6 @@
     "passport-apple": "^2.0.2",
     "passport-google-oauth20": "^2.0.0",
     "passport-twitter": "^1.0.4",
-    "pg": "^8.16.3"
-  }
+  "dev": "nodemon index.js"
+}
 }
