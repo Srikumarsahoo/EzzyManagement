@@ -10,11 +10,16 @@ dotenv.config();
 const app = express();
 
 // ---------- Middleware ----------
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000", // 👈 your frontend URL
+    credentials: true, // allow cookies / tokens
+  })
+);
 app.use(express.json());
 
 // ---------- Passport Setup ----------
-require("./config/passport")(passport); // ✅ pass passport into config
+require("./config/passport")(passport); // ✅ configure passport
 app.use(passport.initialize());
 
 // ---------- MongoDB Connection ----------
@@ -27,8 +32,13 @@ mongoose
   .catch((err) => console.error("❌ MongoDB error:", err));
 
 // ---------- Routes ----------
-const authRoutes = require("./route/auth"); // ✅ corrected folder name
+const authRoutes = require("./route/auth"); // auth routes for Google/Twitter
 app.use("/api/auth", authRoutes);
+
+// ---------- Health Check ----------
+app.get("/", (req, res) => {
+  res.send("🚀 Backend is running...");
+});
 
 // ---------- Server Start ----------
 const PORT = process.env.PORT || 5000;

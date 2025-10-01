@@ -1,7 +1,7 @@
 // src/components/Login.js
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // ✅ for navigation
+import { useNavigate } from "react-router-dom"; 
 import { FaGoogle, FaApple, FaTwitter } from "react-icons/fa";
 import illustration from "../assets/download.png";
 
@@ -22,8 +22,9 @@ export default function Login() {
       });
 
       if (res.data.token) {
-        // ✅ Store JWT
+        // ✅ Save JWT + user in localStorage
         localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
 
         alert("✅ Logged in successfully!");
         navigate("/dashboard"); // redirect after login
@@ -31,15 +32,21 @@ export default function Login() {
         alert("❌ Login failed: No token received.");
       }
     } catch (err) {
-      alert("❌ Login failed: " + (err.response?.data?.msg || "Server error"));
+      alert("❌ Login failed: " + (err.response?.data?.message || "Server error"));
     } finally {
       setLoading(false);
     }
   };
 
+  // ✅ Helper for Google/Twitter login
+  const handleSocialLogin = (provider) => {
+    window.location.href = `http://localhost:5000/api/auth/${provider}`;
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="flex w-full max-w-6xl shadow-lg rounded-2xl bg-white overflow-hidden">
+        
         {/* Left illustration */}
         <div className="hidden md:flex md:w-1/2 bg-gray-100 items-center justify-center p-8">
           <img
@@ -118,9 +125,7 @@ export default function Login() {
           {/* Social logins */}
           <div className="flex justify-center space-x-4">
             <button
-              onClick={() =>
-                (window.location.href = "http://localhost:5000/api/auth/google")
-              }
+              onClick={() => handleSocialLogin("google")}
               className="p-3 border rounded-full hover:bg-gray-100"
             >
               <FaGoogle className="text-red-500 text-xl" />
@@ -132,14 +137,13 @@ export default function Login() {
             >
               <FaApple className="text-black text-xl" />
             </button>
-           <button
-    onClick={() =>
-      (window.location.href = "http://localhost:5000/api/auth/twitter")
-    }
-    className="p-3 border rounded-full hover:bg-gray-100"
-  >
-    <FaTwitter className="text-sky-500 text-xl" />
-  </button>
+
+            <button
+              onClick={() => handleSocialLogin("twitter")}
+              className="p-3 border rounded-full hover:bg-gray-100"
+            >
+              <FaTwitter className="text-sky-500 text-xl" />
+            </button>
           </div>
 
           {/* Sign up link */}

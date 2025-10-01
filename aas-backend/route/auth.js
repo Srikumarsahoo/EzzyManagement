@@ -10,18 +10,13 @@ router.post("/signup", async (req, res) => {
   try {
     const { name, username, email, password } = req.body;
 
-    // check if user exists
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
-      return res
-        .status(400)
-        .json({ message: "User with this email/username already exists" });
+      return res.status(400).json({ message: "User with this email/username already exists" });
     }
 
-    // hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // create user
     const user = new User({
       name,
       username,
@@ -32,9 +27,7 @@ router.post("/signup", async (req, res) => {
 
     await user.save();
 
-    res
-      .status(201)
-      .json({ message: "User registered successfully, please login" });
+    res.status(201).json({ message: "User registered successfully, please login" });
   } catch (err) {
     console.error("❌ Signup error:", err);
     res.status(500).json({ message: err.message || "Server error" });
@@ -46,19 +39,12 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // find user
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: "User not found" });
-    }
+    if (!user) return res.status(400).json({ message: "User not found" });
 
-    // check password
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid password" });
-    }
+    if (!isMatch) return res.status(400).json({ message: "Invalid password" });
 
-    // generate token
     const token = jwt.sign(
       { id: user._id, email: user.email },
       process.env.JWT_SECRET || "secretKey",
@@ -68,12 +54,7 @@ router.post("/login", async (req, res) => {
     res.json({
       message: "Login successful",
       token,
-      user: {
-        id: user._id,
-        email: user.email,
-        name: user.name,
-        username: user.username,
-      },
+      user: { id: user._id, email: user.email, name: user.name, username: user.username },
     });
   } catch (err) {
     console.error("❌ Login error:", err);
@@ -82,14 +63,8 @@ router.post("/login", async (req, res) => {
 });
 
 // ========== GOOGLE AUTH ROUTES ==========
+router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
-// 1) Start Google login/signup
-router.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
-
-// 2) Google OAuth callback
 router.get(
   "/google/callback",
   passport.authenticate("google", { session: false }),
@@ -115,9 +90,7 @@ router.get(
       );
 
       return res.redirect(
-        `http://localhost:3000/success?token=${token}&name=${encodeURIComponent(
-          user.name
-        )}&email=${encodeURIComponent(user.email)}`
+        `http://localhost:3000/success?token=${token}&name=${encodeURIComponent(user.name)}&email=${encodeURIComponent(user.email)}`
       );
     } catch (err) {
       console.error("❌ Google callback error:", err);
@@ -127,42 +100,24 @@ router.get(
 );
 
 // ========== TWITTER AUTH ROUTES (OAuth 2.0) ==========
-
-// 1) Start Twitter login/signup
 router.get(
   "/twitter",
   passport.authenticate("twitter", { scope: ["tweet.read", "users.read", "offline.access"] })
 );
 
-// 2) Twitter OAuth callback
 router.get(
   "/twitter/callback",
   passport.authenticate("twitter", { session: false }),
   async (req, res) => {
     try {
-      let user = await User.findOne({ email: req.user.email });
-
-      if (!user) {
-        user = new User({
-          name: req.user.name,
-          username: req.user.username,
-          email: req.user.email,
-          password: null,
-          tenantId: null,
-        });
-        await user.save();
-      }
-
       const token = jwt.sign(
-        { id: user._id, email: user.email },
+        { id: req.user._id, email: req.user.email },
         process.env.JWT_SECRET || "secretKey",
         { expiresIn: "1h" }
       );
 
       return res.redirect(
-        `http://localhost:3000/success?token=${token}&name=${encodeURIComponent(
-          user.name
-        )}&email=${encodeURIComponent(user.email)}`
+        `http://localhost:3000/success?token=${token}&name=${encodeURIComponent(req.user.name)}&email=${encodeURIComponent(req.user.email)}`
       );
     } catch (err) {
       console.error("❌ Twitter callback error:", err);
