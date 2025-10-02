@@ -5,6 +5,7 @@ import {
   PieChart, Pie, Cell, Legend
 } from "recharts";
 import { FaBell, FaSun, FaPlus } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 // Sample data for charts
 const performanceData = [
@@ -35,11 +36,11 @@ export default function Dashboard() {
           <p className="text-sm text-gray-500">Garage Tools & Parts</p>
         </div>
         <nav className="flex-1 p-4 space-y-3">
-          <a href="#" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">Dashboard</a>
-          <a href="#" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">Inventory</a>
-          <a href="#" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">Suppliers</a>
-          <a href="#" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">Reports</a>
-          <a href="#" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">Users</a>
+          <a href="/Dashboard" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">Dashboard</a>
+          <a href="/Inventory" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">Inventory</a>
+          <a href="/Suppliers" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">Suppliers</a>
+          <a href="/Reports" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">Reports</a>
+          <a href="/Users" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">Users</a>
         </nav>
         <div className="p-4 border-t">
           <p className="text-gray-600 font-medium">Quick Actions</p>
