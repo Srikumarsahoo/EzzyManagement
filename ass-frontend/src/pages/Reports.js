@@ -5,6 +5,7 @@ import {
   PieChart, Pie, Cell, Legend, BarChart, Bar
 } from "recharts";
 import { FaFileDownload, FaChartLine, FaMoneyBillWave, FaBoxes } from "react-icons/fa";
+import { CSVLink } from "react-csv"; // ✅ for CSV export
 
 // Mock Data
 const revenueData = [
@@ -34,15 +35,30 @@ const orderTrends = [
   { month: "Jun", orders: 190 },
 ];
 
+// ✅ Combine all data for CSV export
+const combinedReportData = [
+  { section: "Revenue Trend", data: JSON.stringify(revenueData) },
+  { section: "Sales by Category", data: JSON.stringify(categorySales) },
+  { section: "Orders Trend", data: JSON.stringify(orderTrends) },
+];
+
+const csvHeaders = [
+  { label: "Report Section", key: "section" },
+  { label: "Data", key: "data" },
+];
+
 export default function Reports() {
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar placeholder (reuse your Dashboard sidebar component if modularized) */}
+      {/* Sidebar placeholder */}
       <aside className="w-64 bg-white shadow-lg flex flex-col">
         <div className="p-6 font-bold text-xl border-b">Reports</div>
         <nav className="flex-1 p-4 space-y-3">
-          <a href="/dashboard" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">Dashboard</a>
-          <a href="/reports" className="block py-2 px-3 rounded-lg bg-indigo-100 font-medium">Reports</a>
+          <a href="/Dashboard" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">Dashboard</a>
+          <a href="/Inventory" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">Inventory</a>
+          <a href="/Suppliers" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">Suppliers</a>
+          <a href="/Reports" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">Reports</a>
+          <a href="/Users" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">Users</a>
         </nav>
       </aside>
 
@@ -51,9 +67,16 @@ export default function Reports() {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Business Reports</h1>
-          <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg flex items-center">
+
+          {/* ✅ Export CSV button */}
+          <CSVLink
+            data={combinedReportData}
+            headers={csvHeaders}
+            filename={`business-report-${new Date().toISOString().split("T")[0]}.csv`}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg flex items-center hover:bg-indigo-700 transition"
+          >
             <FaFileDownload className="mr-2" /> Export Report
-          </button>
+          </CSVLink>
         </div>
 
         {/* KPI Cards */}
