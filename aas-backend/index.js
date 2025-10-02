@@ -9,17 +9,30 @@ dotenv.config();
 
 const app = express();
 
-// ---------- Middleware ----------
+// ---------- Middleware (CORS) ----------
+const allowedOrigins = [
+  "http://localhost:3000",               // local React app
+  "https://ezzy-management.vercel.app",  // deployed frontend
+];
+
 app.use(
   cors({
-    origin: "https://ezzy-management.vercel.app", // 👈 your frontend URL
-    credentials: true, // allow cookies / tokens
+    origin: function (origin, callback) {
+      // allow requests with no origin (like mobile apps, curl, Postman)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // allow cookies / authorization headers
   })
 );
+
 app.use(express.json());
 
 // ---------- Passport Setup ----------
-require("./config/passport")(passport); // ✅ configure passport
+require("./config/passport")(passport); 
 app.use(passport.initialize());
 
 // ---------- MongoDB Connection ----------
@@ -32,7 +45,7 @@ mongoose
   .catch((err) => console.error("❌ MongoDB error:", err));
 
 // ---------- Routes ----------
-const authRoutes = require("./route/auth"); // auth routes for Google/Twitter
+const authRoutes = require("./route/auth"); 
 app.use("/api/auth", authRoutes);
 
 // ---------- Health Check ----------
