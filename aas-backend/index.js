@@ -12,7 +12,7 @@ const app = express();
 // ---------- Middleware ----------
 app.use(
   cors({
-    origin: "http://localhost:3000", // 👈 your frontend URL
+    origin: "https://ezzy-management.vercel.app", // 👈 your frontend URL
     credentials: true, // allow cookies / tokens
   })
 );
