@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";   // ✅ import
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaGoogle, FaApple, FaTwitter } from "react-icons/fa";
 import illustration from "../assets/download.png";
 
 export default function Signup() {
-  const navigate = useNavigate(); // ✅ hook
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     name: "",
@@ -34,19 +34,23 @@ export default function Signup() {
       setLoading(true);
       setMessage(null);
 
-      const res = await axios.post("http://localhost:5000/api/auth/signup", {
-        name: form.name,
-        username: form.username,
-        email: form.email,
-        password: form.password,
-      });
+      // ✅ Use Render backend instead of localhost
+      const res = await axios.post(
+        "https://ezzymanagement.onrender.com/api/auth/signup",
+        {
+          name: form.name,
+          username: form.username,
+          email: form.email,
+          password: form.password,
+        }
+      );
 
       setMessage({
         type: "success",
         text: res.data.message || "Signup successful! Redirecting...",
       });
 
-      setTimeout(() => navigate("/login"), 1500);  // ✅ redirect after signup
+      setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
       setMessage({
         type: "error",
@@ -76,7 +80,6 @@ export default function Signup() {
           </h2>
           <p className="text-gray-600 mb-6">Sign up to get started</p>
 
-          {/* Show messages */}
           {message && (
             <div
               className={`mb-4 p-3 rounded-lg text-sm ${
@@ -107,20 +110,20 @@ export default function Signup() {
             </div>
 
             {/* Username */}
-<div>
-  <label className="block text-gray-700 font-medium mb-1">
-    Username
-  </label>
-  <input
-    type="text"
-    name="username"
-    placeholder="Choose a username"
-    value={form.username}
-    onChange={handleChange}
-    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
-    required
-  />
-</div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">
+                Username
+              </label>
+              <input
+                type="text"
+                name="username"
+                placeholder="Choose a username"
+                value={form.username}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                required
+              />
+            </div>
 
             {/* Email */}
             <div>
