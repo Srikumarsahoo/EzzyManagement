@@ -36,7 +36,7 @@ export default function Signup() {
 
       // ✅ Use Render backend instead of localhost
       const res = await axios.post(
-        "https://ezzymanagement.onrender.com/api/auth/signup",
+        "http://localhost:5000/api/auth/signup",
         {
           name: form.name,
           username: form.username,

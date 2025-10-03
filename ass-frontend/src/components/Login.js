@@ -16,7 +16,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await axios.post("https://ezzymanagement.onrender.com/api/auth/login", { email, password });
+      const res = await axios.post("http://localhost:5000/api/auth/login", { email, password });
 
       if (res.data.token) {
         // ✅ Save JWT + user in localStorage
