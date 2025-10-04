@@ -1,8 +1,8 @@
 // src/components/Login.js
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; 
-import { FaGoogle, FaApple, FaTwitter } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { FaGoogle, FaApple, FaTwitter, FaFacebook } from "react-icons/fa";
 import illustration from "../assets/download.png";
 
 export default function Login() {
@@ -16,7 +16,10 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", { email, password });
+      const res = await axios.post("http://localhost:5000/api/auth/login", {
+        email,
+        password,
+      });
 
       if (res.data.token) {
         // ✅ Save JWT + user in localStorage
@@ -29,7 +32,9 @@ export default function Login() {
         alert("❌ Login failed: No token received.");
       }
     } catch (err) {
-      alert("❌ Login failed: " + (err.response?.data?.message || "Server error"));
+      alert(
+        "❌ Login failed: " + (err.response?.data?.message || "Server error")
+      );
     } finally {
       setLoading(false);
     }
@@ -43,7 +48,6 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="flex w-full max-w-6xl shadow-lg rounded-2xl bg-white overflow-hidden">
-        
         {/* Left illustration */}
         <div className="hidden md:flex md:w-1/2 bg-gray-100 items-center justify-center p-8">
           <img
@@ -127,19 +131,11 @@ export default function Login() {
             >
               <FaGoogle className="text-red-500 text-xl" />
             </button>
-
             <button
-              onClick={() => alert("Apple login coming soon!")}
+              onClick={() => handleSocialLogin("facebook")}
               className="p-3 border rounded-full hover:bg-gray-100"
             >
-              <FaApple className="text-black text-xl" />
-            </button>
-
-            <button
-              onClick={() => handleSocialLogin("twitter")}
-              className="p-3 border rounded-full hover:bg-gray-100"
-            >
-              <FaTwitter className="text-sky-500 text-xl" />
+              <FaFacebook className="text-blue-600 text-xl" />
             </button>
           </div>
 

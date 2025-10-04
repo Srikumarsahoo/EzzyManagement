@@ -5,14 +5,16 @@ const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const User = require("../models/User");
 
-// ========== NORMAL SIGNUP ==========
+// ================= NORMAL SIGNUP =================
 router.post("/signup", async (req, res) => {
   try {
     const { name, username, email, password } = req.body;
 
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
-      return res.status(400).json({ message: "User with this email/username already exists" });
+      return res
+        .status(400)
+        .json({ message: "User with this email/username already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -34,7 +36,7 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-// ========== NORMAL LOGIN ==========
+// ================= NORMAL LOGIN =================
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -62,7 +64,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// ========== GOOGLE AUTH ROUTES ==========
+// ================= GOOGLE AUTH =================
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
 router.get(
@@ -99,7 +101,7 @@ router.get(
   }
 );
 
-// ========== TWITTER AUTH ROUTES (OAuth 2.0) ==========
+// ================= TWITTER AUTH (OAuth 2.0) =================
 router.get(
   "/twitter",
   passport.authenticate("twitter", { scope: ["tweet.read", "users.read", "offline.access"] })
@@ -110,18 +112,68 @@ router.get(
   passport.authenticate("twitter", { session: false }),
   async (req, res) => {
     try {
+      let user = await User.findOne({ email: req.user.email });
+
+      if (!user) {
+        user = new User({
+          name: req.user.name,
+          username: req.user.email.split("@")[0],
+          email: req.user.email,
+          password: null,
+          tenantId: null,
+        });
+        await user.save();
+      }
+
       const token = jwt.sign(
-        { id: req.user._id, email: req.user.email },
+        { id: user._id, email: user.email },
         process.env.JWT_SECRET || "secretKey",
         { expiresIn: "1h" }
       );
 
       return res.redirect(
-        `http://localhost:3000/success?token=${token}&name=${encodeURIComponent(req.user.name)}&email=${encodeURIComponent(req.user.email)}`
+        `http://localhost:3000/success?token=${token}&name=${encodeURIComponent(user.name)}&email=${encodeURIComponent(user.email)}`
       );
     } catch (err) {
       console.error("❌ Twitter callback error:", err);
       res.status(500).json({ message: "Twitter login/signup failed" });
+    }
+  }
+);
+
+// ================= FACEBOOK AUTH =================
+router.get("/facebook", passport.authenticate("facebook", { scope: ["email"] }));
+
+router.get(
+  "/facebook/callback",
+  passport.authenticate("facebook", { session: false }),
+  async (req, res) => {
+    try {
+      let user = await User.findOne({ email: req.user.email });
+
+      if (!user) {
+        user = new User({
+          name: req.user.name,
+          username: req.user.email ? req.user.email.split("@")[0] : `fb_${req.user.id}`,
+          email: req.user.email || `${req.user.id}@facebook.com`,
+          password: null,
+          tenantId: null,
+        });
+        await user.save();
+      }
+
+      const token = jwt.sign(
+        { id: user._id, email: user.email },
+        process.env.JWT_SECRET || "secretKey",
+        { expiresIn: "1h" }
+      );
+
+      return res.redirect(
+        `http://localhost:3000/success?token=${token}&name=${encodeURIComponent(user.name)}&email=${encodeURIComponent(user.email)}`
+      );
+    } catch (err) {
+      console.error("❌ Facebook callback error:", err);
+      res.status(500).json({ message: "Facebook login/signup failed" });
     }
   }
 );

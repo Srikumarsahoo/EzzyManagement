@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FaGoogle, FaApple, FaTwitter } from "react-icons/fa";
+import { FaGoogle, FaApple, FaTwitter, FaFacebook } from "react-icons/fa";
 import illustration from "../assets/download.png";
 
 export default function Signup() {
@@ -59,6 +59,9 @@ export default function Signup() {
     } finally {
       setLoading(false);
     }
+  };
+    const handleSocialLogin = (provider) => {
+    window.location.href = `http://localhost:5000/api/auth/${provider}`;
   };
 
   return (
@@ -192,14 +195,12 @@ export default function Signup() {
 
           {/* Social logins */}
           <div className="flex justify-center space-x-4">
-            <button className="p-3 border rounded-full hover:bg-gray-100">
+            <button 
+             onClick={() => handleSocialLogin("google")} className="p-3 border rounded-full hover:bg-gray-100">
               <FaGoogle className="text-red-500 text-xl" />
             </button>
-            <button className="p-3 border rounded-full hover:bg-gray-100">
-              <FaApple className="text-black text-xl" />
-            </button>
-            <button className="p-3 border rounded-full hover:bg-gray-100">
-              <FaTwitter className="text-sky-500 text-xl" />
+              <button onClick={() => handleSocialLogin("facebook")} className="p-3 border rounded-full hover:bg-gray-100">
+              <FaFacebook className="text-blue-600 text-xl" />
             </button>
           </div>
 
