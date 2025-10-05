@@ -9,6 +9,7 @@ import {
   FaBoxes, FaUsers, FaPlus, FaShoppingCart, FaCog
 } from "react-icons/fa";
 import { CSVLink } from "react-csv";
+import ProfileMenu from "../components/ProfileMenu";
 
 // ---------- Mock Data ----------
 const revenueData = [
@@ -78,13 +79,9 @@ export default function Reports() {
         </div>
 
         {/* User Info */}
-        <div className="mt-auto border-t p-4 flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full bg-indigo-200 flex items-center justify-center font-bold">JD</div>
-          <div>
-            <p className="font-semibold">John Doe</p>
-            <p className="text-sm text-gray-500">Garage Manager</p>
-          </div>
-        </div>
+      <div className="p-4 border-t mt-auto">
+                <ProfileMenu />
+              </div>
       </aside>
 
       {/* Main Content */}

@@ -12,7 +12,7 @@ module.exports = (passport) => {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL:
           process.env.GOOGLE_CALLBACK_URL ||
-          "http://localhost:5000/api/auth/google/callback",
+          "http://localhost:5000/auth/google/callback",
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
@@ -31,43 +31,6 @@ module.exports = (passport) => {
           return done(null, user);
         } catch (err) {
           console.error("❌ Google strategy error:", err);
-          return done(err, null);
-        }
-      }
-    )
-  );
-
-  // === TWITTER STRATEGY (OAuth 2.0) ===
-  passport.use(
-    new TwitterStrategy(
-      {
-        clientID: process.env.TWITTER_CLIENT_ID,
-        clientSecret: process.env.TWITTER_CLIENT_SECRET,
-        callbackURL:
-          process.env.TWITTER_CALLBACK_URL ||
-          "http://localhost:5000/api/auth/twitter/callback",
-        scope: ["tweet.read", "users.read", "offline.access"],
-      },
-      async (accessToken, refreshToken, profile, done) => {
-        try {
-          // Twitter may not provide email
-          let email = profile.emails?.[0]?.value || `${profile.id}@twitter.com`;
-
-          let user = await User.findOne({ email });
-
-          if (!user) {
-            user = new User({
-              name: profile.displayName || profile.username,
-              username: profile.username || `twitter_${profile.id}`,
-              email,
-              password: null,
-            });
-            await user.save();
-          }
-
-          return done(null, user);
-        } catch (err) {
-          console.error("❌ Twitter strategy error:", err);
           return done(err, null);
         }
       }
