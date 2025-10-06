@@ -6,6 +6,7 @@ import Inventory from "./components/InventoryList";
 import Dashboard from "./pages/Dashboard";
 import Reports from "./pages/Reports";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import ProfileSettings from "./pages/Settings/ProfileSettings";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/reports" element={<Reports />} />
+        <Route path="/profile" element={<ProfileSettings />} />
       </Routes>
     </Router>
   );
