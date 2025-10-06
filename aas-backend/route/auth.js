@@ -101,7 +101,7 @@ router.get(
   }
 );
 
-// ================= TWITTER AUTH (OAuth 2.0) =================
+// ================= TWITTER AUTH =================
 router.get(
   "/twitter",
   passport.authenticate("twitter", { scope: ["tweet.read", "users.read", "offline.access"] })
@@ -177,5 +177,21 @@ router.get(
     }
   }
 );
+
+// ================= LOGOUT =================
+router.post("/logout", (req, res) => {
+  try {
+    // If you are using sessions:
+    if (req.logout) req.logout(() => {});
+
+    // If you are using JWT (as in your case):
+    // The frontend should just remove the token from localStorage or cookie.
+
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (err) {
+    console.error("❌ Logout error:", err);
+    res.status(500).json({ message: "Logout failed" });
+  }
+});
 
 module.exports = router;

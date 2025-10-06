@@ -17,6 +17,10 @@ import {
 import { FaBell, FaSun, FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import ProfileMenu from "../components/ProfileMenu";
+import {
+  FaFileDownload, FaChartLine, FaMoneyBillWave,
+  FaBoxes, FaUsers, FaShoppingCart, FaCog
+} from "react-icons/fa";
 
 // Sample data for charts
 const performanceData = [
@@ -78,18 +82,17 @@ export default function Dashboard() {
             Users
           </a>
         </nav>
-        <div className="p-4 border-t">
-          <p className="text-gray-600 font-medium">Quick Actions</p>
-          <button className="w-full mt-2 py-2 px-3 bg-indigo-600 text-white rounded-lg">
-            + Add Part
-          </button>
-          <button className="w-full mt-2 py-2 px-3 bg-gray-200 rounded-lg">
-            New Order
-          </button>
-          <button className="w-full mt-2 py-2 px-3 bg-gray-200 rounded-lg">
-            Settings
-          </button>
-        </div>
+         <div className="border-t p-4 space-y-3">
+                <button className="flex items-center w-full py-2 px-3 rounded-lg hover:bg-indigo-100">
+                  <FaPlus className="mr-2 text-indigo-500" /> Add Part
+                </button>
+                <button className="flex items-center w-full py-2 px-3 rounded-lg hover:bg-indigo-100">
+                  <FaShoppingCart className="mr-2 text-green-500" /> New Order
+                </button>
+                <button className="flex items-center w-full py-2 px-3 rounded-lg hover:bg-indigo-100">
+                  <FaCog className="mr-2 text-gray-500" /> Settings
+                </button>
+              </div>
         <div className="p-4 border-t mt-auto">
           <ProfileMenu />
         </div>

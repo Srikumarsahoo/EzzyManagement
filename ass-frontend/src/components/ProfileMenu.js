@@ -8,19 +8,35 @@ import {
   SunIcon,
   ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfileMenu() {
+  const navigate = useNavigate();
+
+  // ✅ Actual logout function
   const handleLogout = () => {
-    alert("Logged out");
+    // Remove user token (and any other user info)
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    // Optional: show confirmation
+    alert("You have been logged out successfully!");
+
+    // Redirect to login page
+    navigate("/login");
   };
 
   const handleToggleTheme = () => {
-    alert("Theme toggled");
+    // Optional: dark/light theme toggle
+    const currentTheme = localStorage.getItem("theme") || "light";
+    const newTheme = currentTheme === "light" ? "dark" : "light";
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.classList.toggle("dark", newTheme === "dark");
   };
 
   return (
     <Menu as="div" className="relative inline-block text-left w-full">
-      {/* Button */}
+      {/* Profile button */}
       <div>
         <Menu.Button className="flex items-center w-full justify-between px-3 py-2 rounded-lg hover:bg-gray-100">
           <div className="flex items-center space-x-3">
@@ -43,7 +59,7 @@ export default function ProfileMenu() {
         </Menu.Button>
       </div>
 
-      {/* Dropdown Menu */}
+      {/* Dropdown */}
       <Transition
         as={Fragment}
         enter="transition ease-out duration-100"
@@ -59,9 +75,8 @@ export default function ProfileMenu() {
             <Menu.Item>
               {({ active }) => (
                 <button
-                  className={`${
-                    active ? "bg-gray-100" : ""
-                  } flex items-center w-full px-4 py-2 text-sm text-gray-700`}
+                  onClick={() => navigate("/profile")}
+                  className={`${active ? "bg-gray-100" : ""} flex items-center w-full px-4 py-2 text-sm text-gray-700`}
                 >
                   <UserIcon className="w-5 h-5 mr-2 text-gray-500" />
                   View Profile
@@ -73,9 +88,8 @@ export default function ProfileMenu() {
             <Menu.Item>
               {({ active }) => (
                 <button
-                  className={`${
-                    active ? "bg-gray-100" : ""
-                  } flex items-center w-full px-4 py-2 text-sm text-gray-700`}
+                  onClick={() => navigate("/settings")}
+                  className={`${active ? "bg-gray-100" : ""} flex items-center w-full px-4 py-2 text-sm text-gray-700`}
                 >
                   <Cog6ToothIcon className="w-5 h-5 mr-2 text-gray-500" />
                   Account Settings
@@ -87,9 +101,8 @@ export default function ProfileMenu() {
             <Menu.Item>
               {({ active }) => (
                 <button
-                  className={`${
-                    active ? "bg-gray-100" : ""
-                  } flex items-center w-full px-4 py-2 text-sm text-gray-700`}
+                  onClick={() => navigate("/change-password")}
+                  className={`${active ? "bg-gray-100" : ""} flex items-center w-full px-4 py-2 text-sm text-gray-700`}
                 >
                   <LockClosedIcon className="w-5 h-5 mr-2 text-gray-500" />
                   Change Password
@@ -101,9 +114,8 @@ export default function ProfileMenu() {
             <Menu.Item>
               {({ active }) => (
                 <button
-                  className={`${
-                    active ? "bg-gray-100" : ""
-                  } flex items-center w-full px-4 py-2 text-sm text-gray-700`}
+                  onClick={() => navigate("/notifications")}
+                  className={`${active ? "bg-gray-100" : ""} flex items-center w-full px-4 py-2 text-sm text-gray-700`}
                 >
                   <BellIcon className="w-5 h-5 mr-2 text-gray-500" />
                   Notification
@@ -116,9 +128,7 @@ export default function ProfileMenu() {
               {({ active }) => (
                 <button
                   onClick={handleToggleTheme}
-                  className={`${
-                    active ? "bg-gray-100" : ""
-                  } flex items-center w-full px-4 py-2 text-sm text-gray-700`}
+                  className={`${active ? "bg-gray-100" : ""} flex items-center w-full px-4 py-2 text-sm text-gray-700`}
                 >
                   <SunIcon className="w-5 h-5 mr-2 text-gray-500" />
                   Toggle Theme
@@ -127,15 +137,13 @@ export default function ProfileMenu() {
             </Menu.Item>
           </div>
 
-          {/* Logout */}
+          {/* ✅ Logout Option */}
           <div className="py-1 border-t border-gray-200">
             <Menu.Item>
               {({ active }) => (
                 <button
                   onClick={handleLogout}
-                  className={`${
-                    active ? "bg-gray-100" : ""
-                  } flex items-center w-full px-4 py-2 text-sm text-red-600`}
+                  className={`${active ? "bg-gray-100" : ""} flex items-center w-full px-4 py-2 text-sm text-red-600`}
                 >
                   <ArrowRightOnRectangleIcon className="w-5 h-5 mr-2 text-red-500" />
                   Log Out
