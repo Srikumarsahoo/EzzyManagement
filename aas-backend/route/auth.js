@@ -64,6 +64,38 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// ================== PROFILE GET ==================
+router.get("/profile/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json(user);
+  } catch (err) {
+    console.error("❌ Profile fetch error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// ================== PROFILE UPDATE ==================
+router.put("/profile/:id", async (req, res) => {
+  try {
+    const { name, email, username, mobile, company, role, image } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { name, email, username, mobile, company, role, image },
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    if (!updatedUser) return res.status(404).json({ message: "User not found" });
+
+    res.json({ message: "Profile updated successfully", user: updatedUser });
+  } catch (err) {
+    console.error("❌ Profile update error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 // ================= GOOGLE AUTH =================
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
@@ -181,12 +213,7 @@ router.get(
 // ================= LOGOUT =================
 router.post("/logout", (req, res) => {
   try {
-    // If you are using sessions:
     if (req.logout) req.logout(() => {});
-
-    // If you are using JWT (as in your case):
-    // The frontend should just remove the token from localStorage or cookie.
-
     res.status(200).json({ message: "Logged out successfully" });
   } catch (err) {
     console.error("❌ Logout error:", err);

@@ -1,11 +1,14 @@
+// src/api/userApi.js
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://ezzymanagement.onrender.com/api",
+  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000/api",
 });
 
-// get user profile
-export const getUserProfile = (id) => API.get(`/users/${id}`);
+export const getUserProfile = async (id) => {
+  return await API.get(`/users/${id}`);
+};
 
-// update user profile
-export const updateUserProfile = (id, data) => API.put(`/users/${id}`, data);
+export const updateUserProfile = async (id, data) => {
+  return await API.put(`/users/${id}`, data);
+};
