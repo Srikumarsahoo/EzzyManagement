@@ -26,6 +26,7 @@ import {
 import { CSVLink } from "react-csv";
 import ProfileMenu from "../components/ProfileMenu";
 import SalesReport from "./Reports/SalesReport";
+import ExpenseReport from "./Reports/ExpenseReport";
 
 
 // ---------- Mock Data ----------
@@ -239,7 +240,7 @@ export default function Reports() {
 
         {/* Expenses Placeholder */}
         {activeTab === "Expenses" && (
-          <ChartCard title="Expenses Report">Expenses data visualization coming soon...</ChartCard>
+          <ExpenseReport />
         )}
       </main>
     </div>

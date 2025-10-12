@@ -76,44 +76,57 @@ export default function Suppliers() {
     <div className="flex bg-gray-50 min-h-screen">
       {/* Sidebar */}
       <aside className="w-64 bg-white shadow-lg flex flex-col">
-        <div className="p-6 font-bold text-xl border-b">
-          Parts Manager
-          <p className="text-sm text-gray-500">Garage Tools & Parts</p>
-        </div>
-        <nav className="flex-1 p-4 space-y-3">
-          <a href="/dashboard" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">
-            Dashboard
-          </a>
-          <a href="/inventory" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">
-            Inventory
-          </a>
-          <a href="/suppliers" className="block py-2 px-3 rounded-lg bg-indigo-100 font-medium text-indigo-600">
-            Suppliers
-          </a>
-          <a href="/reports" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">
-            Reports
-          </a>
-          <a href="/users" className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium">
-            Users
-          </a>
-        </nav>
-
-        <div className="border-t p-4 space-y-3">
-          <button className="flex items-center w-full py-2 px-3 rounded-lg hover:bg-indigo-100">
-            <FaPlus className="mr-2 text-indigo-500" /> Add Part
-          </button>
-          <button className="flex items-center w-full py-2 px-3 rounded-lg hover:bg-indigo-100">
-            <FaShoppingCart className="mr-2 text-green-500" /> New Order
-          </button>
-          <button className="flex items-center w-full py-2 px-3 rounded-lg hover:bg-indigo-100">
-            <FaCog className="mr-2 text-gray-500" /> Settings
-          </button>
-        </div>
-
-        <div className="p-4 border-t mt-auto">
-          <ProfileMenu />
-        </div>
-      </aside>
+              <div className="p-6 font-bold text-xl border-b">
+                Parts Manager
+                <p className="text-sm text-gray-500">Garage Tools & Parts</p>
+              </div>
+              <nav className="flex-1 p-4 space-y-3">
+                <a
+                  href="/Dashboard"
+                  className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium"
+                >
+                  Dashboard
+                </a>
+                <a
+                  href="/Inventory"
+                  className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium"
+                >
+                  Inventory
+                </a>
+                <a
+                  href="/Suppliers"
+                  className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium"
+                >
+                  Suppliers
+                </a>
+                <a
+                  href="/Reports"
+                  className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium"
+                >
+                  Reports
+                </a>
+                <a
+                  href="/Users"
+                  className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium"
+                >
+                  Users
+                </a>
+              </nav>
+               <div className="border-t p-4 space-y-3">
+                      <button className="flex items-center w-full py-2 px-3 rounded-lg hover:bg-indigo-100">
+                        <FaPlus className="mr-2 text-indigo-500" /> Add Part
+                      </button>
+                      <button className="flex items-center w-full py-2 px-3 rounded-lg hover:bg-indigo-100">
+                        <FaShoppingCart className="mr-2 text-green-500" /> New Order
+                      </button>
+                      <button className="flex items-center w-full py-2 px-3 rounded-lg hover:bg-indigo-100">
+                        <FaCog className="mr-2 text-gray-500" /> Settings
+                      </button>
+                    </div>
+              <div className="p-4 border-t mt-auto">
+                <ProfileMenu />
+              </div>
+            </aside>
 
       {/* Main Content */}
       <main className="flex-1 p-8">

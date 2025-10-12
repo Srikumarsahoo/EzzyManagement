@@ -12,12 +12,19 @@ import {
   AlertOctagon,
   Package,
 } from "lucide-react";
+import { FaBell, FaSun, FaPlus } from "react-icons/fa";
+import {
+  FaFileDownload, FaChartLine, FaMoneyBillWave,
+  FaBoxes, FaUsers, FaShoppingCart, FaCog
+} from "react-icons/fa";
+import ProfileMenu from "../components/ProfileMenu";
+
 
 export default function Inventory() {
   const navigate = useNavigate();
 
   const navItems = [
-    { name: "Dashboard", route: "/dashboard" },
+    { name: "Dashboard", route: "" },
     { name: "Inventory", route: "/inventory" },
     { name: "Suppliers", route: "/suppliers" },
     { name: "Reports", route: "/reports" },
@@ -93,34 +100,59 @@ export default function Inventory() {
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r shadow-sm flex flex-col">
-        <div className="p-4 flex items-center gap-2 border-b">
-          <Package className="text-blue-600" />
-          <h1 className="font-bold text-lg">Parts Manager</h1>
-        </div>
-
-        <nav className="flex-1 p-4 space-y-2">
-          {navItems.map((item) => (
-            <button
-              key={item.name}
-              onClick={() => navigate(item.route)}
-              className={`w-full text-left px-4 py-2 rounded-lg font-medium ${
-                item.name === "Inventory"
-                  ? "bg-blue-100 text-blue-700"
-                  : "hover:bg-gray-100 text-gray-700"
-              }`}
-            >
-              {item.name}
-            </button>
-          ))}
-        </nav>
-
-        <div className="border-t p-4">
-          <button className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-700">
-            Settings
-          </button>
-        </div>
-      </aside>
+     <aside className="w-64 bg-white shadow-lg flex flex-col">
+             <div className="p-6 font-bold text-xl border-b">
+               Parts Manager
+               <p className="text-sm text-gray-500">Garage Tools & Parts</p>
+             </div>
+             <nav className="flex-1 p-4 space-y-3">
+               <a
+                 href="/Dashboard"
+                 className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium"
+               >
+                 Dashboard
+               </a>
+               <a
+                 href="/Inventory"
+                 className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium"
+               >
+                 Inventory
+               </a>
+               <a
+                 href="/Suppliers"
+                 className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium"
+               >
+                 Suppliers
+               </a>
+               <a
+                 href="/Reports"
+                 className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium"
+               >
+                 Reports
+               </a>
+               <a
+                 href="/Users"
+                 className="block py-2 px-3 rounded-lg hover:bg-indigo-100 font-medium"
+               >
+                 Users
+               </a>
+             </nav>
+              <div className="border-t p-4 space-y-3">
+                     <button className="flex items-center w-full py-2 px-3 rounded-lg hover:bg-indigo-100">
+                       <FaPlus className="mr-2 text-indigo-500" /> Add Part
+                     </button>
+                     <button className="flex items-center w-full py-2 px-3 rounded-lg hover:bg-indigo-100">
+                       <FaShoppingCart className="mr-2 text-green-500" /> New Order
+                     </button>
+                     <button className="flex items-center w-full py-2 px-3 rounded-lg hover:bg-indigo-100">
+                       <FaCog className="mr-2 text-gray-500" /> Settings
+                     </button>
+                   </div>
+             <div className="p-4 border-t mt-auto">
+               <ProfileMenu />
+             </div>
+           </aside>
+     
 
       {/* Main Content */}
       <main className="flex-1 p-8">
