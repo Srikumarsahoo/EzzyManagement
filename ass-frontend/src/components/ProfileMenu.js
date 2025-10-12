@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import {
   UserIcon,
@@ -9,25 +9,32 @@ import {
   ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
+import { getUserProfile } from "../api/userApi"; // ✅ Import your API
 
 export default function ProfileMenu() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
-  // ✅ Actual logout function
+  // ✅ Fetch user info
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser?._id) {
+      getUserProfile(storedUser._id)
+        .then((res) => setUser(res.data))
+        .catch((err) => console.error("Failed to load profile:", err));
+    }
+  }, []);
+
+  // ✅ Logout
   const handleLogout = () => {
-    // Remove user token (and any other user info)
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-
-    // Optional: show confirmation
     alert("You have been logged out successfully!");
-
-    // Redirect to login page
     navigate("/login");
   };
 
+  // ✅ Dark/Light theme toggle
   const handleToggleTheme = () => {
-    // Optional: dark/light theme toggle
     const currentTheme = localStorage.getItem("theme") || "light";
     const newTheme = currentTheme === "light" ? "dark" : "light";
     localStorage.setItem("theme", newTheme);
@@ -41,11 +48,15 @@ export default function ProfileMenu() {
         <Menu.Button className="flex items-center w-full justify-between px-3 py-2 rounded-lg hover:bg-gray-100">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold">
-              JD
+              {user ? user.name?.charAt(0).toUpperCase() : "?"}
             </div>
             <div className="text-left">
-              <p className="font-medium text-sm text-gray-800">John Doe</p>
-              <p className="text-xs text-gray-500">Garage Manager</p>
+              <p className="font-medium text-sm text-gray-800">
+                {user ? user.name : "Loading..."}
+              </p>
+              <p className="text-xs text-gray-500">
+                {user ? user.role || "User" : ""}
+              </p>
             </div>
           </div>
           <svg

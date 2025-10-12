@@ -1,4 +1,3 @@
-// src/api/userApi.js
 import axios from "axios";
 
 const API = axios.create({
@@ -6,7 +5,7 @@ const API = axios.create({
 });
 
 export const getUserProfile = async (id) => {
-  return await API.get(`/users/${id}`);
+  return await API.get(`/users/${id}`); // ✅ matches /api/users/:id
 };
 
 export const updateUserProfile = async (id, data) => {

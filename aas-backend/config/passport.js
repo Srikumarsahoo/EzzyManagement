@@ -1,10 +1,34 @@
+// aas-backend/config/passport.js
+
+const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const TwitterStrategy = require("passport-twitter-oauth2").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
 const User = require("../models/User");
 
 module.exports = (passport) => {
-  // === GOOGLE STRATEGY ===
+  /* =====================
+     🟢 JWT STRATEGY
+  ====================== */
+  const jwtOpts = {};
+  jwtOpts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+  jwtOpts.secretOrKey = process.env.JWT_SECRET;
+
+  passport.use(
+    new JwtStrategy(jwtOpts, async (jwt_payload, done) => {
+      try {
+        const user = await User.findById(jwt_payload.id);
+        if (user) return done(null, user);
+        else return done(null, false);
+      } catch (err) {
+        console.error("❌ JWT strategy error:", err);
+        return done(err, false);
+      }
+    })
+  );
+
+  /* =====================
+     🔵 GOOGLE STRATEGY
+  ====================== */
   passport.use(
     new GoogleStrategy(
       {
@@ -37,7 +61,9 @@ module.exports = (passport) => {
     )
   );
 
-  // === FACEBOOK STRATEGY ===
+  /* =====================
+     🔵 FACEBOOK STRATEGY
+  ====================== */
   passport.use(
     new FacebookStrategy(
       {
@@ -51,7 +77,7 @@ module.exports = (passport) => {
       async (accessToken, refreshToken, profile, done) => {
         try {
           // Facebook may not always return email
-          let email =
+          const email =
             profile.emails?.[0]?.value || `${profile.id}@facebook.com`;
 
           let user = await User.findOne({ email });
@@ -77,7 +103,9 @@ module.exports = (passport) => {
     )
   );
 
-  // === Serialize / Deserialize ===
+  /* =====================
+     🟣 SERIALIZATION
+  ====================== */
   passport.serializeUser((user, done) => {
     done(null, user.id);
   });
